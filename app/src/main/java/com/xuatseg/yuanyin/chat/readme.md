@@ -1,8 +1,22 @@
 # Chat 模块
 
-该模块提供了机器人的聊天功能相关接口定义。
+该模块提供了机器人的聊天功能相关接口定义与基础实现。
 
-## 核心接口
+## 分层结构
+
+- model/：聊天数据与本地推理接口实现（如ChatModel）
+- presenter/：聊天业务逻辑与消息流转（如ChatPresenter）
+- ui/：Jetpack Compose 聊天界面（如ChatScreen）
+
+## 用法示例
+
+```kotlin
+val model = ChatModel()
+val presenter = ChatPresenter(model)
+ChatScreen(presenter)
+```
+
+## MVP核心接口
 
 ### IChatInterface
 主要的聊天接口，提供以下功能：
