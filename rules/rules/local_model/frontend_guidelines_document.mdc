@@ -1,0 +1,27 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Frontend Guidelines Document
+
+## 1. 架构
+- MVP模式
+- View层只负责UI渲染和用户交互
+
+## 2. UI设计
+- 主要界面：摄像头预览、识别结果高亮、聊天窗口、日志展示
+- 物体/人脸/手势识别结果用绿色方框高亮
+- 聊天窗口支持流式文字输出
+
+## 3. 响应式
+- 使用Jetpack Compose实现响应式UI
+- 识别结果实时刷新
+
+## 4. 可访问性
+- 语音播报、文字高对比度
+
+## 5. 代码规范
+- 遵循Kotlin最佳实践
+- 组件化、可复用
+
