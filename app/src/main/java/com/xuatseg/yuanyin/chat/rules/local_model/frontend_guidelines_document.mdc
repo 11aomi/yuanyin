@@ -1,7 +1,7 @@
 ---
-description: 
+description: Cursor's Memory Bank
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # Frontend Guidelines Document
 

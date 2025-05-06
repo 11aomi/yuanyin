@@ -69,6 +69,31 @@ data class ChatMessage(
 /**
  * 消息内容
  */
+/**
+ * 消息内容基类 - MessageContent 是一个密封类(sealed class)，定义了所有可能的消息类型
+ * 包含三个子类:
+ * 1. Text - 文本消息类型
+ *    - text: 存储文本内容
+ *
+ * 2. Voice - 语音消息类型
+ *    - audioFile: 语音文件
+ *    - duration: 语音时长
+ *    - transcript: 语音转文字内容(可选)
+ *
+ * 3. Error - 错误消息类型
+ *    - error: 错误信息
+ *
+ * 继承关系:
+ * MessageContent (sealed class)
+ * ├── Text
+ * ├── Voice
+ * └── Error
+ *
+ * 其他相关类:
+ * - ChatMessage: 包含 MessageContent 作为消息内容字段
+ * - IChatInterface: 定义发送不同类型消息的方法
+ * - IVoiceProcessor: 处理语音相关功能
+ */
 sealed class MessageContent {
     data class Text(val text: String) : MessageContent()
     data class Voice(
