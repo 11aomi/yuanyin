@@ -1,0 +1,29 @@
+---
+description: Cursor's Memory Bank
+globs: 
+alwaysApply: true
+---
+# Cursor Project Rules
+
+## 1. 目录结构
+- 遵循MVP分层
+- model/、view/、presenter/、ui/、core/等
+
+## 2. 代码提交
+- 规范commit message
+- 重要变更需PR审核
+
+## 3. 依赖管理
+- 统一Gradle依赖版本
+- 禁止随意升级核心依赖
+
+## 4. 文档管理
+- 所有结构文档、流程文档、技术文档需同步更新
+
+## 5. 代码风格
+- Kotlin官方代码风格
+- 变量、类、方法命名清晰
+
+## 6. 测试
+- 单元测试、集成测试覆盖主要功能
+

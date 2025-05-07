@@ -4,6 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.xuatseg.yuanyin.chat.ChatScreen
+import com.xuatseg.yuanyin.chat.ChatViewModel
+import com.xuatseg.yuanyin.chat.VoiceProcessorImpl
 import com.xuatseg.yuanyin.mode.ModeManagerStub
 import com.xuatseg.yuanyin.mode.ModeMonitorStub
 import com.xuatseg.yuanyin.mode.ModePersistenceStub
@@ -24,13 +30,27 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val voiceProcessor = VoiceProcessorImpl(this)
+        val chatViewModel = ChatViewModel(voiceProcessor)
         setContent {
+            val navController = rememberNavController()
             YuanYinTheme {
-                MainScreen(
-                    viewModel = viewModel,
-                    modeSwitchViewModel = viewModel,
-                    robotControlViewModel = RobotControlViewModel()
-                )
+                NavHost(navController = navController, startDestination = "main") {
+                    composable("main") {
+                        MainScreen(
+                            viewModel = viewModel,
+                            modeSwitchViewModel = viewModel,
+                            robotControlViewModel = RobotControlViewModel(),
+                            onSwitchToLocal = { navController.navigate("chat") }
+                        )
+                    }
+                    composable("chat") {
+                        ChatScreen(
+                            viewModel = chatViewModel,
+                            onNavigateBack = { navController.popBackStack() }
+                        )
+                    }
+                }
             }
         }
     }

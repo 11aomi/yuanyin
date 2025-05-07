@@ -25,7 +25,8 @@ import com.xuatseg.yuanyin.viewmodel.MainViewModel
 fun MainScreen(
     viewModel: MainViewModel,
     modeSwitchViewModel: IModeSwitchViewModel,
-    robotControlViewModel: IRobotControlViewModel
+    robotControlViewModel: IRobotControlViewModel,
+    onSwitchToLocal: () -> Unit // 添加回调参数
 ) {
     val botState by viewModel.botState.collectAsState()
     val modeSwitchUiState by modeSwitchViewModel.getUiState().collectAsState(initial = ModeSwitchUiState(
@@ -49,6 +50,9 @@ fun MainScreen(
                         currentMode = modeSwitchUiState.currentMode,
                         onModeSwitch = { mode ->
                             modeSwitchViewModel.handleEvent(ModeSwitchEvent.SwitchMode(mode))
+                            if (mode == ProcessingMode.LOCAL) {
+                                onSwitchToLocal() // 调用回调
+                            }
                         }
                     )
                 },

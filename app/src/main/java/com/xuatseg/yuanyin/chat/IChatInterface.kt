@@ -1,6 +1,7 @@
 package com.xuatseg.yuanyin.chat
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import java.io.File
 
 /**
@@ -133,6 +134,16 @@ interface IVoiceProcessor {
     suspend fun speechToText(audioFile: File): String
 
     /**
+     * 流式语音识别
+     * @param audioFile 语音文件
+     * @param onResult 结果回调
+     */
+    suspend fun speechToTextStream(
+        audioFile: File,
+        onResult: (partial: String, final: String?) -> Unit
+    )
+
+    /**
      * 文字转语音
      * @param text 文字内容
      * @return 语音文件
@@ -202,4 +213,63 @@ interface IChatStateListener {
      * @param error 错误信息
      */
     fun onError(error: String)
+}
+
+/**
+ * 聊天界面实现
+ */
+class ChatInterfaceImpl : IChatInterface {
+    private val messages = mutableListOf<ChatMessage>()
+    private val newMessagesFlow = MutableSharedFlow<ChatMessage>()
+    private val messageStatusFlow = MutableSharedFlow<MessageStatus>()
+
+    override suspend fun sendTextMessage(message: String): String {
+        val messageId = System.currentTimeMillis().toString()
+        val chatMessage = ChatMessage(
+            id = messageId,
+            content = MessageContent.Text(message),
+            sender = MessageSender.User,
+            timestamp = System.currentTimeMillis(),
+            status = MessageStatus.Sending
+        )
+        messages.add(chatMessage)
+        newMessagesFlow.emit(chatMessage)
+        // 模拟发送成功
+        messageStatusFlow.emit(MessageStatus.Sent)
+        return messageId
+    }
+
+    override suspend fun sendVoiceMessage(audioFile: File): String {
+        val messageId = System.currentTimeMillis().toString()
+        val chatMessage = ChatMessage(
+            id = messageId,
+            content = MessageContent.Voice(audioFile, 0, null),
+            sender = MessageSender.User,
+            timestamp = System.currentTimeMillis(),
+            status = MessageStatus.Sending
+        )
+        messages.add(chatMessage)
+        newMessagesFlow.emit(chatMessage)
+        // 模拟发送成功
+        messageStatusFlow.emit(MessageStatus.Sent)
+        return messageId
+    }
+
+    override suspend fun getMessageHistory(limit: Int, offset: Int): List<ChatMessage> {
+        return messages.drop(offset).take(limit)
+    }
+
+    override fun observeNewMessages(): Flow<ChatMessage> = newMessagesFlow
+
+    override fun observeMessageStatus(): Flow<MessageStatus> = messageStatusFlow
+
+    override suspend fun retryMessage(messageId: String) {
+        // 模拟重试逻辑
+        messageStatusFlow.emit(MessageStatus.Sending)
+        messageStatusFlow.emit(MessageStatus.Sent)
+    }
+
+    override suspend fun deleteMessage(messageId: String) {
+        messages.removeAll { it.id == messageId }
+    }
 }
