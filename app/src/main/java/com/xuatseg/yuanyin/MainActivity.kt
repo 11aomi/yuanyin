@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-//fdsgf dsry yr
+//fdsgf dsry yr和个体户
 @Composable
 fun YuanYinTheme(
     content: @Composable () -> Unit
